@@ -2,13 +2,21 @@
 
 namespace Database\Seeders;
 
+use App\Enums\VerificationStatus;
 use App\Models\Campus;
-use App\Models\Major;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
 class CampusSeeder extends Seeder
 {
+    // Nama jalur, hari mulai, hari tutup relatif terhadap hari seeding.
+    private const ADMISSION_PERIODS = [
+        ['Gelombang 1', -30, 30],
+        ['Gelombang 2', 31, 90],
+    ];
+
+    public function __construct(private readonly StudyProgramSeeder $programs) {}
+
     public function run(): void
     {
         foreach ($this->campuses() as $data) {
@@ -16,15 +24,29 @@ class CampusSeeder extends Seeder
             unset($data['majors']);
 
             $data['slug'] = Str::slug($data['name']);
+            $data['verification_status'] = VerificationStatus::Verified;
+            $data['verified_at'] = now();
 
             $campus = Campus::updateOrCreate(
                 ['slug' => $data['slug']],
                 $data,
             );
 
-            $campus->majors()->sync(
-                Major::whereIn('name', $majorNames)->pluck('id'),
-            );
+            $this->programs->seedForCampus($campus, $majorNames);
+            $this->seedAdmissionPeriods($campus);
+        }
+    }
+
+    private function seedAdmissionPeriods(Campus $campus): void
+    {
+        $campus->admissionPeriods()->delete();
+
+        foreach (self::ADMISSION_PERIODS as [$name, $opensOffset, $closesOffset]) {
+            $campus->admissionPeriods()->create([
+                'name' => $name,
+                'opens_at' => today()->addDays($opensOffset),
+                'closes_at' => today()->addDays($closesOffset),
+            ]);
         }
     }
 

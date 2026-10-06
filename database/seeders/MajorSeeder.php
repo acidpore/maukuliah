@@ -8,10 +8,38 @@ use Illuminate\Support\Str;
 
 class MajorSeeder extends Seeder
 {
+    private const RIASEC_CODES = [
+        'Teknik Informatika' => 'IRC',
+        'Sistem Informasi' => 'ICE',
+        'Ilmu Komputer' => 'IRA',
+        'Teknik Sipil' => 'RIC',
+        'Teknik Mesin' => 'RIC',
+        'Teknik Elektro' => 'RIC',
+        'Arsitektur' => 'AIR',
+        'Manajemen' => 'ECS',
+        'Akuntansi' => 'CEI',
+        'Ilmu Ekonomi' => 'IEC',
+        'Bisnis Digital' => 'ECA',
+        'Kedokteran' => 'ISR',
+        'Farmasi' => 'ICR',
+        'Ilmu Keperawatan' => 'SIR',
+        'Kesehatan Masyarakat' => 'SIE',
+        'Hukum' => 'ESI',
+        'Psikologi' => 'SIA',
+        'Ilmu Komunikasi' => 'ASE',
+        'Hubungan Internasional' => 'ESA',
+        'Pendidikan Guru Sekolah Dasar' => 'SAC',
+        'Matematika' => 'IRC',
+        'Statistika' => 'ICR',
+        'Agroteknologi' => 'RIS',
+        'Desain Komunikasi Visual' => 'AEI',
+    ];
+
     public function run(): void
     {
         foreach ($this->majors() as $major) {
             $major['slug'] = Str::slug($major['name']);
+            $major['riasec_codes'] = self::RIASEC_CODES[$major['name']] ?? null;
 
             Major::updateOrCreate(
                 ['slug' => $major['slug']],

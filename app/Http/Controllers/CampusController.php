@@ -2,46 +2,37 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CampusFilterRequest;
 use App\Models\Campus;
+use App\Services\CampusDetailService;
+use App\Services\CampusSearchService;
+use App\Services\FavoriteService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class CampusController extends Controller
 {
-    public function index(Request $request): View
+    public function __construct(
+        private readonly CampusSearchService $search,
+        private readonly CampusDetailService $detail,
+        private readonly FavoriteService $favorites,
+    ) {}
+
+    public function index(CampusFilterRequest $request): View
     {
-        $filters = $request->only(Campus::FILTERABLE_COLUMNS);
-        $query = $request->query('q');
-        $sort = $request->query('sort');
-
-        $campuses = Campus::query()
-            ->withCount('majors')
-            ->search($query)
-            ->filter($filters)
-            ->sorted($sort)
-            ->paginate(9)
-            ->withQueryString();
-
-        return view('campuses.index', [
-            'campuses' => $campuses,
-            'filters' => $filters,
-            'query' => $query,
-            'sort' => $sort,
-            'forms' => Campus::distinct()->orderBy('form')->pluck('form'),
-            'cities' => Campus::distinct()->orderBy('city')->pluck('city'),
-            'provinces' => Campus::distinct()->orderBy('province')->pluck('province'),
-            'accreditations' => Campus::distinct()->orderBy('accreditation')->pluck('accreditation'),
-            'typeOptions' => Campus::TYPE_LABELS,
-            'formLabels' => Campus::FORM_LABELS,
-        ]);
+        return view('campuses.index', $this->search->indexData(
+            $request->filters(),
+            $request->term(),
+            $request->sortKey(),
+        ));
     }
 
-    public function show(Campus $campus): View
+    public function show(Request $request, Campus $campus): View
     {
-        $campus->load([
-            'majors' => fn ($query) => $query->orderBy('name'),
-        ]);
+        abort_unless($campus->isVerified(), 404);
 
-        return view('campuses.show', compact('campus'));
+        return view('campuses.show', $this->detail->data($campus) + [
+            'isFavorited' => $this->favorites->isFavoritedBy($request->user(), $campus),
+        ]);
     }
 }
