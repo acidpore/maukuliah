@@ -5,7 +5,7 @@
 @section('content')
     <div class="page-head">
         <div class="page-head__inner">
-            <h1 class="page-title">Daftar Jurusan</h1>
+            <h1 class="page-title">Daftar jurusan</h1>
             <p class="page-subtitle">Temukan jurusan yang sesuai minat, bakat, dan prospek kariermu.</p>
             <p class="page-count">{{ $majors->total() }} jurusan ditemukan</p>
         </div>
@@ -20,19 +20,22 @@
         </div>
 
         <div class="toolbar">
-            <form class="toolbar__search" action="{{ route('majors.index') }}" method="GET" role="search">
-                <input type="hidden" name="category" value="{{ $category }}">
-                <input class="toolbar__search-input" type="search" name="q" value="{{ $query }}" placeholder="Cari nama jurusan..." aria-label="Cari jurusan">
-                <button class="btn btn--primary btn--sm" type="submit">Cari</button>
-            </form>
+            @include('partials.filter-bar', [
+                'action' => route('majors.index'),
+                'query' => $query,
+                'placeholder' => 'Cari nama jurusan',
+                'hidden' => ['category' => $category],
+            ])
         </div>
 
         @if ($majors->isEmpty())
-            <div class="empty">
-                <h2 class="empty__title">Tidak ada jurusan yang cocok</h2>
-                <p class="empty__text">Coba ubah kata kunci atau kategori pencarianmu.</p>
-                <a class="btn btn--primary" href="{{ route('majors.index') }}">Reset Pencarian</a>
-            </div>
+            @include('partials.empty-state', [
+                'icon' => 'books',
+                'title' => 'Tidak ada jurusan yang cocok',
+                'text' => 'Coba ubah kata kunci atau kategori pencarianmu.',
+                'actionLabel' => 'Reset pencarian',
+                'actionUrl' => route('majors.index'),
+            ])
         @else
             <div class="grid grid--majors">
                 @foreach ($majors as $major)

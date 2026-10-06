@@ -5,89 +5,108 @@
 @section('content')
     <section class="hero">
         <div class="container hero__inner">
-            <span class="hero__eyebrow">Platform pencarian kampus terlengkap</span>
-            <h1 class="hero__title">Persiapkan kuliah dengan mudah, <span>raih masa depan cerah</span></h1>
-            <p class="hero__subtitle">Temukan kampus, jurusan, dan informasi perkuliahan yang tepat sesuai minat dan bakatmu.</p>
+            <div>
+                <h1 class="hero__title">
+                    Persiapkan kuliah dengan mudah, temukan
+                    <span class="hero__typed" data-typed="kampus impianmu|jurusan yang pas|beasiswa terbaik|masa depan cerahmu"><span data-typed-label>kampus impianmu</span><span class="hero__caret" aria-hidden="true"></span></span>
+                </h1>
+                <p class="hero__subtitle">Bandingkan kampus dan jurusan di seluruh Indonesia, kenali minat bakatmu, lalu daftar langsung dari satu tempat.</p>
 
-            <form class="hero__search" action="{{ route('search') }}" method="GET" role="search">
-                <input class="hero__search-input" type="search" name="q" placeholder="Cari kampus, jurusan, atau kota..." aria-label="Cari kampus atau jurusan">
-                <button class="btn btn--primary" type="submit">Cari</button>
-            </form>
+                <form class="search-bar" action="{{ route('search') }}" method="GET" role="search">
+                    <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+                    <input class="search-bar__input" type="search" name="q" placeholder="Cari kampus, jurusan, atau kota" aria-label="Cari kampus, jurusan, atau kota">
+                    <button class="btn btn--primary" type="submit">Cari</button>
+                </form>
 
-            <div class="hero__cta">
-                <a class="btn btn--light" href="{{ route('campuses.index') }}">Jelajahi Kampus</a>
-                <a class="btn btn--ghost" href="{{ route('majors.index') }}">Lihat Jurusan</a>
-                <a class="btn btn--ghost" href="{{ route('soon') }}">Tes Potensi</a>
-            </div>
-
-            <div class="hero__stats">
-                <div class="hero__stat">
-                    <div class="hero__stat-num">{{ $stats['campuses'] }}</div>
-                    <div class="hero__stat-label">Kampus</div>
-                </div>
-                <div class="hero__stat">
-                    <div class="hero__stat-num">{{ $stats['majors'] }}</div>
-                    <div class="hero__stat-label">Jurusan</div>
-                </div>
-                <div class="hero__stat">
-                    <div class="hero__stat-num">{{ $stats['cities'] }}</div>
-                    <div class="hero__stat-label">Kota</div>
+                <div class="hero__links">
+                    <a href="{{ route('campuses.index') }}">Jelajahi kampus <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+                    <a href="{{ route('majors.index') }}">Lihat jurusan <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
                 </div>
             </div>
+
+            @php($spotlight = $featuredCampuses->first())
+            @if ($spotlight)
+                <div class="hero-panel">
+                    <div class="hero-panel__card">
+                        @include('partials.campus-card', ['campus' => $spotlight])
+                    </div>
+                    <div class="hero-panel__row">
+                        @include('partials.badge', ['label' => $spotlight->typeLabel(), 'variant' => 'negeri'])
+                        @include('partials.badge', ['label' => $spotlight->formLabel(), 'variant' => 'swasta'])
+                        @include('partials.badge', ['label' => 'Akreditasi '.$spotlight->accreditation, 'variant' => 'accred'])
+                    </div>
+                    <div class="hero-panel__stats">
+                        <div class="hero-panel__stat">
+                            <i class="ph ph-buildings" aria-hidden="true"></i>
+                            <span><strong>{{ $stats['campuses'] }}</strong> kampus</span>
+                        </div>
+                        <div class="hero-panel__stat">
+                            <i class="ph ph-graduation-cap" aria-hidden="true"></i>
+                            <span><strong>{{ $stats['majors'] }}</strong> jurusan</span>
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
     </section>
+
+    <div class="container">
+        <div class="stat-strip">
+            <div class="stat">
+                <div class="stat__num">{{ $stats['campuses'] }}</div>
+                <div class="stat__label">Kampus</div>
+            </div>
+            <div class="stat">
+                <div class="stat__num">{{ $stats['majors'] }}</div>
+                <div class="stat__label">Jurusan</div>
+            </div>
+            <div class="stat">
+                <div class="stat__num">{{ $stats['cities'] }}</div>
+                <div class="stat__label">Kota</div>
+            </div>
+        </div>
+    </div>
 
     <section class="section">
         <div class="container">
-            <div class="section__head">
-                <div>
-                    <h2 class="section__title">Kenapa {{ config('app.name') }}?</h2>
-                    <p class="section__subtitle">Semua yang kamu butuhkan untuk menentukan pilihan kuliah dalam satu platform.</p>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature">
-                    <span class="feature__icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
-                    </span>
-                    <h3 class="feature__title">Pencarian Lengkap</h3>
-                    <p class="feature__text">Cari kampus dan jurusan berdasarkan lokasi, jenis, bentuk, dan akreditasi.</p>
-                </div>
-                <div class="feature">
-                    <span class="feature__icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
-                    </span>
-                    <h3 class="feature__title">Filter Cerdas</h3>
-                    <p class="feature__text">Saring hasil dengan cepat agar menemukan pilihan yang paling relevan.</p>
-                </div>
-                <div class="feature">
-                    <span class="feature__icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path></svg>
-                    </span>
-                    <h3 class="feature__title">Informasi Ringkas</h3>
-                    <p class="feature__text">Data kampus dan jurusan disajikan ringkas dan mudah dipahami.</p>
-                </div>
-                <div class="feature">
-                    <span class="feature__icon">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                    </span>
-                    <h3 class="feature__title">Gratis dan Mudah</h3>
-                    <p class="feature__text">Akses semua informasi tanpa biaya, kapan saja dan di mana saja.</p>
-                </div>
+            @include('partials.section-head', [
+                'title' => 'Semua keputusan kuliah di satu tempat',
+                'subtitle' => 'Dari mencari kampus sampai mengenali jurusan yang cocok, tanpa biaya.',
+            ])
+            <div class="bento">
+                <article class="bento__cell bento__cell--blue" data-reveal>
+                    <span class="bento__icon"><i class="ph ph-buildings" aria-hidden="true"></i></span>
+                    <h3 class="bento__title">Cari kampus dengan filter lengkap</h3>
+                    <p class="bento__text">Saring berdasarkan lokasi, jenis, bentuk, dan akreditasi. Hasilnya bisa dibagikan lewat tautan.</p>
+                </article>
+                <article class="bento__cell bento__cell--tint" data-reveal>
+                    <span class="bento__icon"><i class="ph ph-books" aria-hidden="true"></i></span>
+                    <h3 class="bento__title">Kenali jurusan</h3>
+                    <p class="bento__text">Mata kuliah dan prospek kariernya.</p>
+                </article>
+                <article class="bento__cell" data-reveal>
+                    <span class="bento__icon"><i class="ph ph-medal" aria-hidden="true"></i></span>
+                    <h3 class="bento__title">Temukan beasiswa</h3>
+                    <p class="bento__text">Lengkap dengan periode pendaftaran.</p>
+                </article>
+                <article class="bento__cell bento__cell--pattern" data-reveal>
+                    <span class="bento__icon"><i class="ph ph-compass" aria-hidden="true"></i></span>
+                    <h3 class="bento__title">Ukur minat dan bakat</h3>
+                    <p class="bento__text">Tes potensi membantu memilih jurusan yang sesuai dirimu.</p>
+                </article>
             </div>
         </div>
     </section>
 
-    <section class="section section--alt">
+    <section class="section section--tint">
         <div class="container">
-            <div class="section__head">
-                <div>
-                    <h2 class="section__title">Rekomendasi Kampus</h2>
-                    <p class="section__subtitle">Kampus-kampus dengan reputasi baik dan prospek lulusan yang cerah.</p>
-                </div>
-                <a class="section__link" href="{{ route('campuses.index') }}">Lihat Lainnya</a>
-            </div>
-            <div class="grid grid--campuses">
+            @include('partials.section-head', [
+                'title' => 'Rekomendasi kampus',
+                'subtitle' => 'Geser untuk melihat kampus lainnya.',
+                'linkLabel' => 'Lihat semua kampus',
+                'linkUrl' => route('campuses.index'),
+            ])
+            <div class="rail">
                 @foreach ($featuredCampuses as $campus)
                     @include('partials.campus-card', ['campus' => $campus])
                 @endforeach
@@ -97,13 +116,11 @@
 
     <section class="section">
         <div class="container">
-            <div class="section__head">
-                <div>
-                    <h2 class="section__title">Jelajahi Jurusan</h2>
-                    <p class="section__subtitle">Temukan jurusan yang paling banyak diminati dan sesuai minatmu.</p>
-                </div>
-                <a class="section__link" href="{{ route('majors.index') }}">Lihat Semua</a>
-            </div>
+            @include('partials.section-head', [
+                'title' => 'Jurusan yang banyak dicari',
+                'linkLabel' => 'Lihat semua jurusan',
+                'linkUrl' => route('majors.index'),
+            ])
             <div class="grid grid--majors">
                 @foreach ($featuredMajors as $major)
                     @include('partials.major-card', ['major' => $major])
@@ -112,17 +129,89 @@
         </div>
     </section>
 
-    <section class="section section--alt">
-        <div class="container">
-            <div class="section__head">
-                <div>
-                    <h2 class="section__title">Kota Pelajar Populer</h2>
-                    <p class="section__subtitle">Jelajahi kampus berdasarkan kota tujuanmu.</p>
+    @if (! empty($featuredCareers) && count($featuredCareers))
+        <section class="section section--tint">
+            <div class="container">
+                @include('partials.section-head', [
+                    'title' => 'Karier yang bisa kamu tuju',
+                    'subtitle' => 'Lihat kisaran gaji dan jurusan yang mengarah ke profesi ini.',
+                    'linkLabel' => 'Lihat semua karier',
+                    'linkUrl' => route('careers.index'),
+                ])
+                <div class="row-list row-list--cols">
+                    @foreach ($featuredCareers as $career)
+                        @include('partials.career-row', ['career' => $career])
+                    @endforeach
                 </div>
             </div>
-            <div class="chips">
+        </section>
+    @endif
+
+    @if (! empty($featuredScholarships) && count($featuredScholarships))
+        <section class="section">
+            <div class="container">
+                @include('partials.section-head', [
+                    'title' => 'Beasiswa untuk kuliahmu',
+                    'linkLabel' => 'Lihat semua beasiswa',
+                    'linkUrl' => route('scholarships.index'),
+                ])
+                <div class="grid grid--scholarships">
+                    @foreach ($featuredScholarships as $scholarship)
+                        @include('partials.scholarship-card', ['scholarship' => $scholarship])
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    <section class="section">
+        <div class="container">
+            @include('partials.section-head', [
+                'title' => 'Kuliah sesuai jadwalmu',
+                'subtitle' => 'Pilih kelas yang pas dengan waktu luangmu, termasuk kelas malam dan akhir pekan untuk yang bekerja.',
+                'linkLabel' => 'Lihat semua kampus',
+                'linkUrl' => route('campuses.index'),
+            ])
+            @include('partials.link-tiles', [
+                'modifier' => 'link-tiles--five',
+                'tiles' => [
+                    ['icon' => 'sun-horizon', 'title' => 'Kuliah pagi', 'text' => 'Waktu belajar penuh', 'url' => route('campuses.by-schedule', ['schedule' => 'pagi'])],
+                    ['icon' => 'sun', 'title' => 'Kuliah sore', 'text' => 'Setelah jam sekolah', 'url' => route('campuses.by-schedule', ['schedule' => 'sore'])],
+                    ['icon' => 'moon', 'title' => 'Kuliah malam', 'text' => 'Selepas jam kerja', 'url' => route('campuses.by-schedule', ['schedule' => 'malam'])],
+                    ['icon' => 'calendar-check', 'title' => 'Akhir pekan', 'text' => 'Sabtu dan Minggu', 'url' => route('campuses.by-schedule', ['schedule' => 'akhir-pekan'])],
+                    ['icon' => 'arrows-clockwise', 'title' => 'Kelas shift', 'text' => 'Jadwal bergantian', 'url' => route('campuses.by-schedule', ['schedule' => 'shift'])],
+                ],
+            ])
+        </div>
+    </section>
+
+    <section class="section section--tint">
+        <div class="container">
+            @include('partials.section-head', [
+                'title' => 'Program dan metode belajar',
+                'subtitle' => 'Reguler, kelas karyawan, atau rekognisi pembelajaran lampau. Tatap muka, blended, hybrid, atau online.',
+            ])
+            @include('partials.link-tiles', [
+                'tiles' => [
+                    ['icon' => 'briefcase', 'title' => 'Kelas karyawan', 'text' => 'Kuliah sambil bekerja', 'url' => route('campuses.by-program', ['programType' => 'karyawan'])],
+                    ['icon' => 'student', 'title' => 'Kelas reguler', 'text' => 'Untuk lulusan SMA', 'url' => route('campuses.by-program', ['programType' => 'reguler'])],
+                    ['icon' => 'certificate', 'title' => 'RPL', 'text' => 'Pengakuan pengalaman kerja', 'url' => route('campuses.by-program', ['programType' => 'rpl'])],
+                    ['icon' => 'chalkboard-teacher', 'title' => 'Tatap muka', 'text' => 'Belajar langsung di kelas', 'url' => route('campuses.by-method', ['method' => 'tatap-muka'])],
+                    ['icon' => 'git-merge', 'title' => 'Blended', 'text' => 'Kelas dan daring', 'url' => route('campuses.by-method', ['method' => 'blended'])],
+                    ['icon' => 'laptop', 'title' => 'Full online', 'text' => 'Dari mana saja', 'url' => route('campuses.by-method', ['method' => 'full-online'])],
+                ],
+            ])
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            @include('partials.section-head', [
+                'title' => 'Cari kampus berdasarkan kota',
+            ])
+            <div class="city-list">
                 @foreach (['Yogyakarta', 'Bandung', 'Surabaya', 'Malang', 'Semarang', 'Depok', 'Bogor', 'Medan'] as $city)
-                    <a class="chip" href="{{ route('campuses.index', ['city' => $city]) }}">{{ $city }}</a>
+                    <a href="{{ route('campuses.index', ['city' => $city]) }}">{{ $city }}</a>
                 @endforeach
             </div>
         </div>
@@ -132,10 +221,63 @@
         <div class="container">
             <div class="cta-banner">
                 <div>
+                    <span class="eyebrow">Tes potensi</span>
                     <h2 class="cta-banner__title">Masih bingung memilih jurusan?</h2>
-                    <p class="cta-banner__text">Kenali minat dan bakatmu lewat tes potensi untuk mendapatkan rekomendasi jurusan yang paling cocok.</p>
+                    <p class="cta-banner__text">Kerjakan tes minat dan bakat gratis untuk mendapatkan rekomendasi jurusan yang cocok denganmu.</p>
+                    <div class="cta-banner__actions">
+                        <a class="btn btn--light btn--lg" href="{{ route('tests.index') }}">Mulai tes</a>
+                    </div>
                 </div>
-                <a class="btn btn--light btn--lg" href="{{ route('soon') }}">Ikuti Tes Potensi</a>
+                <div class="test-list">
+                    <a class="test-list__item" href="{{ route('tests.start', 'riasec') }}">
+                        <i class="ph ph-target" aria-hidden="true"></i>
+                        <span>Tes RIASEC <small>Cocokkan minat dengan jurusan</small></span>
+                        <i class="ph ph-arrow-right" aria-hidden="true"></i>
+                    </a>
+                    <a class="test-list__item" href="{{ route('tests.start', 'learning-style') }}">
+                        <i class="ph ph-lightbulb" aria-hidden="true"></i>
+                        <span>Gaya belajar <small>Kenali cara belajar yang efektif</small></span>
+                        <i class="ph ph-arrow-right" aria-hidden="true"></i>
+                    </a>
+                    <a class="test-list__item" href="{{ route('tests.start', 'mbti') }}">
+                        <i class="ph ph-identification-card" aria-hidden="true"></i>
+                        <span>Tes MBTI <small>Pahami tipe kepribadianmu</small></span>
+                        <i class="ph ph-arrow-right" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="cta-banner">
+                <div>
+                    <span class="eyebrow">Program afiliasi</span>
+                    <h2 class="cta-banner__title">Ajak teman kuliah, dapatkan komisi</h2>
+                    <p class="cta-banner__text">Bagikan tautan rujukanmu. Setiap mahasiswa yang mendaftar dan menyelesaikan pembayaran lewat tautanmu menghasilkan komisi.</p>
+                    <div class="cta-banner__actions">
+                        <a class="btn btn--light btn--lg" href="{{ route('affiliate.index') }}">Pelajari afiliasi</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section section--tint">
+        <div class="container partner">
+            <div class="partner__panel" aria-hidden="true">
+                <span class="partner__badge"><i class="ph ph-buildings" aria-hidden="true"></i></span>
+            </div>
+            <div>
+                <span class="eyebrow">Untuk kampus</span>
+                <h2 class="section__title">Jaring calon mahasiswa baru</h2>
+                <ul class="partner__list">
+                    <li><i class="ph ph-check-circle" aria-hidden="true"></i> Tampilkan profil dan program studi kampusmu</li>
+                    <li><i class="ph ph-check-circle" aria-hidden="true"></i> Unggah brosur untuk diunduh calon mahasiswa</li>
+                    <li><i class="ph ph-check-circle" aria-hidden="true"></i> Pantau daftar peminat dari satu dasbor</li>
+                </ul>
+                <a class="btn btn--primary btn--lg" href="{{ route('soon') }}">Daftarkan kampus</a>
             </div>
         </div>
     </section>

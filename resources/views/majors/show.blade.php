@@ -5,52 +5,59 @@
 
 @section('content')
     <div class="container">
-        <nav class="breadcrumb" aria-label="Breadcrumb">
-            <a href="{{ route('home') }}">Beranda</a>
-            <span class="breadcrumb__sep">/</span>
-            <a href="{{ route('majors.index') }}">Jurusan</a>
-            <span class="breadcrumb__sep">/</span>
-            <span>{{ $major->name }}</span>
-        </nav>
+        @include('partials.breadcrumb', ['items' => [
+            ['label' => 'Beranda', 'url' => route('home')],
+            ['label' => 'Jurusan', 'url' => route('majors.index')],
+            ['label' => $major->name, 'url' => null],
+        ]])
     </div>
 
     <div class="detail-hero">
         <div class="container">
             <h1 class="detail-hero__title">{{ $major->name }}</h1>
             <div class="detail-hero__badges">
-                <span class="badge badge--cat">{{ $major->category }}</span>
-                <span class="badge badge--outline">{{ $campuses->count() }} kampus menyediakan</span>
+                @include('partials.badge', ['label' => $major->category, 'variant' => 'cat'])
+                @include('partials.badge', ['label' => $campuses->count().' kampus menyediakan', 'variant' => 'outline'])
             </div>
         </div>
     </div>
 
     <div class="container">
-        <div class="detail-layout detail-layout--flush">
+        <div class="detail-layout">
             <div>
                 <section class="content-panel">
-                    <h2 class="content-panel__title">Deskripsi</h2>
+                    <h2 class="content-panel__title">Tentang jurusan</h2>
                     <div class="prose">
                         <p>{{ $major->description }}</p>
                     </div>
                 </section>
 
-                @if (!empty($major->courses))
+                @if (! empty($major->courses))
                     <section class="content-panel">
-                        <h2 class="content-panel__title">Mata Kuliah</h2>
-                        <ul class="check-list">
+                        <h2 class="content-panel__title">Mata kuliah</h2>
+                        <ul class="tag-grid tag-grid--cols">
                             @foreach ($major->courses as $course)
-                                <li>{{ $course }}</li>
+                                <li><i class="ph ph-book-open" aria-hidden="true"></i> {{ $course }}</li>
                             @endforeach
                         </ul>
                     </section>
                 @endif
 
-                @if (!empty($major->career_prospects))
+                @if ($major->relationLoaded('careers') && $major->careers->isNotEmpty())
                     <section class="content-panel">
-                        <h2 class="content-panel__title">Prospek Karier</h2>
-                        <ul class="check-list">
+                        <h2 class="content-panel__title">Prospek karier</h2>
+                        <div class="tag-grid tag-grid--cols">
+                            @foreach ($major->careers as $career)
+                                <a href="{{ route('careers.show', $career) }}"><i class="ph ph-briefcase" aria-hidden="true"></i> {{ $career->name }}</a>
+                            @endforeach
+                        </div>
+                    </section>
+                @elseif (! empty($major->career_prospects))
+                    <section class="content-panel">
+                        <h2 class="content-panel__title">Prospek karier</h2>
+                        <ul class="tag-grid tag-grid--cols">
                             @foreach ($major->career_prospects as $career)
-                                <li>{{ $career }}</li>
+                                <li><i class="ph ph-briefcase" aria-hidden="true"></i> {{ $career }}</li>
                             @endforeach
                         </ul>
                     </section>
@@ -59,25 +66,25 @@
 
             <aside>
                 <div class="sidebar-card">
-                    <h2 class="sidebar-card__title">Belum yakin memilih kampus?</h2>
-                    <p class="sidebar-card__text">Bandingkan kampus yang menyediakan jurusan ini dan temukan yang paling sesuai.</p>
-                    <a class="btn btn--primary" href="{{ route('campuses.index') }}">Jelajahi Kampus</a>
-                    <a class="btn btn--ghost" href="{{ route('soon') }}">Tes Potensi</a>
+                    <h2 class="sidebar-card__title">Belum yakin memilih?</h2>
+                    <p class="sidebar-card__text">Kerjakan tes potensi untuk melihat apakah jurusan ini cocok denganmu.</p>
+                    <a class="btn btn--primary" href="{{ route('tests.index') }}">Mulai tes potensi</a>
+                    <a class="btn btn--ghost" href="{{ route('campuses.index') }}">Jelajahi kampus</a>
+                    @include('partials.favorite-button', ['type' => 'major', 'model' => $major])
                 </div>
             </aside>
         </div>
     </div>
 
-    <section class="section section--alt">
+    <section class="section section--tint">
         <div class="container">
-            <div class="section__head">
-                <h2 class="section__title">Kampus Penyedia</h2>
-            </div>
+            @include('partials.section-head', ['title' => 'Kampus penyedia'])
             @if ($campuses->isEmpty())
-                <div class="empty">
-                    <h2 class="empty__title">Belum ada kampus penyedia</h2>
-                    <p class="empty__text">Data kampus untuk jurusan ini sedang dilengkapi.</p>
-                </div>
+                @include('partials.empty-state', [
+                    'icon' => 'buildings',
+                    'title' => 'Belum ada kampus penyedia',
+                    'text' => 'Data kampus untuk jurusan ini sedang dilengkapi.',
+                ])
             @else
                 <div class="grid grid--campuses">
                     @foreach ($campuses as $campus)
