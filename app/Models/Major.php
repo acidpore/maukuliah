@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Major extends Model
 {
@@ -18,6 +19,7 @@ class Major extends Model
         'description',
         'courses',
         'career_prospects',
+        'riasec_codes',
     ];
 
     protected function casts(): array
@@ -35,7 +37,17 @@ class Major extends Model
 
     public function campuses(): BelongsToMany
     {
-        return $this->belongsToMany(Campus::class);
+        return $this->belongsToMany(Campus::class, 'study_programs')->distinct();
+    }
+
+    public function studyPrograms(): HasMany
+    {
+        return $this->hasMany(StudyProgram::class);
+    }
+
+    public function careers(): BelongsToMany
+    {
+        return $this->belongsToMany(Career::class);
     }
 
     public function scopeSearch(Builder $query, ?string $term): Builder

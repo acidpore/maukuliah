@@ -14,6 +14,7 @@ class SearchController extends Controller
         $query = $request->query('q');
 
         $campuses = Campus::query()
+            ->verified()
             ->withCount('majors')
             ->search($query)
             ->orderBy('name')

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Major;
+use App\Services\FavoriteService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -26,13 +27,18 @@ class MajorController extends Controller
         return view('majors.index', compact('majors', 'categories', 'query', 'category'));
     }
 
-    public function show(Major $major): View
+    public function show(Request $request, Major $major, FavoriteService $favorites): View
     {
+        $isFavorited = $favorites->isFavoritedBy($request->user(), $major);
+
+        $major->load(['careers' => fn ($query) => $query->orderBy('name')]);
+
         $campuses = $major->campuses()
+            ->verified()
             ->withCount('majors')
             ->orderBy('name')
             ->get();
 
-        return view('majors.show', compact('major', 'campuses'));
+        return view('majors.show', compact('major', 'campuses', 'isFavorited'));
     }
 }
