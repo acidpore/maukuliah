@@ -26,6 +26,7 @@ class CampusSeeder extends Seeder
             $data['slug'] = Str::slug($data['name']);
             $data['verification_status'] = VerificationStatus::Verified;
             $data['verified_at'] = now();
+            $data['logo'] = $this->logoPath($data['slug']);
 
             $campus = Campus::updateOrCreate(
                 ['slug' => $data['slug']],
@@ -35,6 +36,16 @@ class CampusSeeder extends Seeder
             $this->programs->seedForCampus($campus, $majorNames);
             $this->seedAdmissionPeriods($campus);
         }
+    }
+
+    /**
+     * Logo dipasang hanya bila berkasnya ada di public/images/logos, bernama slug kampus.
+     */
+    private function logoPath(string $slug): ?string
+    {
+        $files = glob(public_path("images/logos/{$slug}.*")) ?: [];
+
+        return $files === [] ? null : 'images/logos/'.basename($files[0]);
     }
 
     private function seedAdmissionPeriods(Campus $campus): void
