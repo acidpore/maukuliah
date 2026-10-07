@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LeadStatusController;
 use App\Http\Controllers\AffiliateController;
 use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\LoginController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\MajorController;
 use App\Http\Controllers\ScholarshipController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\TryoutController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
@@ -31,6 +33,8 @@ Route::get('/jobs', [CareerController::class, 'index'])->name('careers.index');
 Route::get('/jobs/{career}', [CareerController::class, 'show'])->name('careers.show');
 Route::get('/scholarships', [ScholarshipController::class, 'index'])->name('scholarships.index');
 Route::get('/scholarships/{scholarship}', [ScholarshipController::class, 'show'])->name('scholarships.show');
+Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
+Route::get('/articles/{article:slug}', [ArticleController::class, 'show'])->name('articles.show');
 Route::get('/search', SearchController::class)->name('search');
 
 Route::get('/jadwal-kuliah/{schedule}/{region?}', [CampusCollectionController::class, 'schedule'])
@@ -81,6 +85,13 @@ Route::prefix('test')->name('tests.')->group(function () {
 
     Route::get('/{type}', [TestController::class, 'start'])->where('type', $testKeys)->name('start');
     Route::post('/{type}', [TestController::class, 'submit'])->where('type', $testKeys)->name('submit');
+});
+
+Route::prefix('tryouts')->name('tryouts.')->group(function () {
+    Route::get('/', [TryoutController::class, 'index'])->name('index');
+    Route::get('/{slug}', [TryoutController::class, 'show'])->name('show');
+    Route::get('/{slug}/kerjakan', [TryoutController::class, 'take'])->name('take');
+    Route::post('/{slug}/kerjakan', [TryoutController::class, 'submit'])->name('submit');
 });
 
 Route::redirect('/riasec', '/test/riasec');

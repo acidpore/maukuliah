@@ -6,7 +6,7 @@
 @endphp
 <a class="campus-card" href="{{ route('campuses.show', $campus) }}">
     <div class="campus-card__head">
-        <span class="monogram">{{ $campus->initials() }}</span>
+        @include('partials.campus-logo', ['campus' => $campus])
         @include('partials.badge', ['label' => $campus->typeLabel(), 'variant' => $campus->type])
     </div>
     <h3 class="campus-card__name">{{ $campus->name }}</h3>

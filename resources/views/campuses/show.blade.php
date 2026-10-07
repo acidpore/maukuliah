@@ -5,6 +5,8 @@
     $periods = $campus->admissionPeriods;
     $files = $brochures ?? $campus->brochures;
     $faqItems = $faqs ?? collect();
+    $testimonialItems = $testimonials ?? collect();
+    $photoItems = $photos ?? collect();
     $hasScholarships = $campus->relationLoaded('scholarships') && $campus->scholarships->isNotEmpty();
     $applyUrl = route('applications.create', ['campus' => $campus->slug]);
     $brochureLabels = ['program' => 'Brosur program studi', 'tuition' => 'Biaya kuliah', 'general' => 'Brosur umum'];
@@ -26,7 +28,7 @@
 
     <div class="detail-hero">
         <div class="container detail-hero__main">
-            <span class="monogram">{{ $campus->initials() }}</span>
+            @include('partials.campus-logo', ['campus' => $campus])
             <div>
                 <h1 class="detail-hero__title">{{ $campus->name }}</h1>
                 <div class="detail-hero__badges">
@@ -57,6 +59,12 @@
             @endif
             @if ($hasScholarships)
                 <a class="tabs__link" href="#beasiswa" data-tab-link>Beasiswa</a>
+            @endif
+            @if ($photoItems->isNotEmpty())
+                <a class="tabs__link" href="#galeri" data-tab-link>Galeri</a>
+            @endif
+            @if ($testimonialItems->isNotEmpty())
+                <a class="tabs__link" href="#testimoni" data-tab-link>Testimoni</a>
             @endif
             @if ($faqItems->isNotEmpty())
                 <a class="tabs__link" href="#faq" data-tab-link>FAQ</a>
@@ -161,6 +169,35 @@
                         <div class="grid grid--scholarships-pair">
                             @foreach ($campus->scholarships as $scholarship)
                                 @include('partials.scholarship-card', ['scholarship' => $scholarship])
+                            @endforeach
+                        </div>
+                    </section>
+                @endif
+
+                @if ($photoItems->isNotEmpty())
+                    <section class="content-panel" id="galeri">
+                        <h2 class="content-panel__title">Galeri kampus</h2>
+                        <ul class="gallery">
+                            @foreach ($photoItems as $photo)
+                                <li>
+                                    <figure class="gallery__item">
+                                        <img class="gallery__image" src="{{ $photo->url() }}" alt="{{ $photo->caption ?? 'Foto '.$campus->name }}" loading="lazy">
+                                        @if ($photo->caption)
+                                            <figcaption class="gallery__caption">{{ $photo->caption }}</figcaption>
+                                        @endif
+                                    </figure>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </section>
+                @endif
+
+                @if ($testimonialItems->isNotEmpty())
+                    <section class="content-panel" id="testimoni">
+                        <h2 class="content-panel__title">Kata alumni</h2>
+                        <div class="testimonial-list">
+                            @foreach ($testimonialItems as $testimonial)
+                                @include('partials.testimonial-card', ['testimonial' => $testimonial])
                             @endforeach
                         </div>
                     </section>

@@ -312,6 +312,18 @@ ul {
     letter-spacing: 0.02em;
 }
 
+.monogram--logo {
+    padding: 6px;
+    background: #fff;
+    border: 1px solid var(--line);
+}
+
+.monogram--logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
 /* Header */
 .site-header {
     position: sticky;
@@ -659,6 +671,7 @@ ul {
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    min-height: 44px;
     font-weight: 600;
 }
 
@@ -1417,6 +1430,10 @@ ul {
     border-radius: 18px;
     background: #fff;
     font-size: 1.3rem;
+}
+
+.detail-hero .monogram--logo {
+    padding: 8px;
 }
 
 .detail-hero__title {

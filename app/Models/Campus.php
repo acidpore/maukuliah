@@ -125,6 +125,16 @@ class Campus extends Model
         return $this->hasMany(Brochure::class);
     }
 
+    public function testimonials(): HasMany
+    {
+        return $this->hasMany(Testimonial::class);
+    }
+
+    public function photos(): HasMany
+    {
+        return $this->hasMany(CampusPhoto::class)->orderBy('sort');
+    }
+
     public function leads(): HasMany
     {
         return $this->hasMany(Lead::class);
@@ -138,6 +148,15 @@ class Campus extends Model
     public function formLabel(): string
     {
         return self::FORM_LABELS[$this->form] ?? ucfirst($this->form);
+    }
+
+    public function logoUrl(): ?string
+    {
+        if ($this->logo === null || ! is_file(public_path($this->logo))) {
+            return null;
+        }
+
+        return asset($this->logo);
     }
 
     public function initials(): string

@@ -21,6 +21,7 @@
                 <ul class="footer-links">
                     <li><a href="{{ route('applications.create') }}">Daftar Kuliah</a></li>
                     <li><a href="{{ route('tests.index') }}">Tes Potensi</a></li>
+                    <li><a href="{{ route('articles.index') }}">Artikel</a></li>
                     <li><a href="{{ route('campuses.by-schedule', ['schedule' => 'malam']) }}">Kuliah Malam</a></li>
                     <li><a href="{{ route('campuses.by-program', ['programType' => 'karyawan']) }}">Kelas Karyawan</a></li>
                     <li><a href="{{ route('affiliate.index') }}">Program Afiliasi</a></li>

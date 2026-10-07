@@ -30,6 +30,8 @@ class CampusDetailService
                 ->orderBy('degree_level')
                 ->orderBy('monthly_installment')
                 ->get(),
+            'testimonials' => $campus->testimonials()->orderBy('id')->get(),
+            'photos' => $campus->photos,
             'faqs' => $this->faqs->forPath('universities/'.$campus->slug),
         ];
     }

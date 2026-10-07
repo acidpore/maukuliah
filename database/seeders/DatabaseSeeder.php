@@ -14,8 +14,12 @@ class DatabaseSeeder extends Seeder
             CareerSeeder::class,
             ScholarshipSeeder::class,
             BrochureSeeder::class,
+            TestimonialSeeder::class,
+            CampusPhotoSeeder::class,
             UserSeeder::class,
             FaqSeeder::class,
+            ArticleSeeder::class,
+            DemoSeeder::class,
         ]);
     }
 }

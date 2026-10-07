@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use App\Models\Campus;
 use App\Models\Career;
 use App\Models\Major;
@@ -42,6 +43,11 @@ class HomeController extends Controller
             ->limit(self::FEATURED_SCHOLARSHIPS)
             ->get();
 
+        $latestArticles = Article::published()
+            ->latestFirst()
+            ->limit(config('articles.latest_on_home'))
+            ->get();
+
         $stats = [
             'campuses' => Campus::verified()->count(),
             'majors' => Major::count(),
@@ -53,6 +59,7 @@ class HomeController extends Controller
             'featuredMajors',
             'featuredCareers',
             'featuredScholarships',
+            'latestArticles',
             'stats',
         ));
     }

@@ -274,6 +274,7 @@
 
 /* Tabel */
 .table-wrap {
+    position: relative;
     overflow-x: auto;
     border: 1px solid var(--line);
     border-radius: var(--radius-control);
@@ -878,4 +879,249 @@ ol.steps {
     margin: 0;
     padding: 0;
     list-style: none;
+}
+
+/* Tryout: pewaktu, opsi bertumpuk, aturan, ringkasan, pembahasan */
+.timer {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    justify-self: start;
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
+    background: var(--blue-50);
+    color: var(--blue-800);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.question__options--stack {
+    display: grid;
+    gap: var(--space-2);
+}
+
+.prose-list {
+    display: grid;
+    gap: var(--space-2);
+    padding-left: 1.2em;
+    color: var(--body);
+    list-style: disc;
+}
+
+.fact-list {
+    display: grid;
+    gap: var(--space-3);
+    margin: 0 0 var(--space-4);
+}
+
+.fact-list > div {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--line);
+}
+
+.fact-list dt {
+    color: var(--muted);
+}
+
+.fact-list dd {
+    margin: 0;
+    font-weight: 600;
+    color: var(--ink);
+}
+
+.review__line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    margin: var(--space-2) 0 0;
+    color: var(--body);
+}
+
+/* Testimoni dan galeri kampus */
+.monogram--sm {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+}
+
+.testimonial-list {
+    display: grid;
+    gap: var(--space-4);
+}
+
+.testimonial-card {
+    display: grid;
+    gap: var(--space-4);
+    margin: 0;
+    padding: var(--space-5);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: var(--surface);
+}
+
+.testimonial-card__quote {
+    margin: 0;
+    color: var(--body);
+    line-height: 1.6;
+}
+
+.testimonial-card__who {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.testimonial-card__name,
+.testimonial-card__meta,
+.testimonial-card__job {
+    display: block;
+}
+
+.testimonial-card__name {
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.testimonial-card__meta,
+.testimonial-card__job {
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.gallery__item {
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-control);
+    background: var(--surface);
+}
+
+.gallery__image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    background: var(--blue-50);
+}
+
+.gallery__caption {
+    padding: var(--space-2) var(--space-3);
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+@media (min-width: 900px) {
+    .testimonial-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Artikel: kartu, grid, isi bacaan */
+.grid--articles {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.article-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: var(--surface);
+    box-shadow: var(--shadow-card);
+    color: var(--body);
+    transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+
+.article-card:hover {
+    border-color: var(--blue-200);
+    box-shadow: var(--shadow-lift);
+    text-decoration: none;
+    transform: translateY(-2px);
+}
+
+.article-card__cover {
+    display: grid;
+    place-items: center;
+    height: 110px;
+    background: var(--pattern-dots), var(--blue-800);
+    color: #fff;
+    font-size: 2.4rem;
+}
+
+.article-card__body {
+    display: grid;
+    flex: 1;
+    align-content: start;
+    gap: var(--space-2);
+    padding: var(--space-4);
+}
+
+.article-card__body .badge {
+    justify-self: start;
+}
+
+.article-card__title {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+}
+
+.article-card__excerpt {
+    margin: 0;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    color: var(--muted);
+    font-size: 0.95rem;
+}
+
+.article-card__meta {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--muted);
+}
+
+.prose--article {
+    max-width: 68ch;
+}
+
+.prose--article p {
+    font-size: 1.05rem;
+    line-height: 1.75;
+}
+
+@media (min-width: 640px) {
+    .grid--articles {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1024px) {
+    .grid--articles {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .home-articles .grid--articles {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
 }

@@ -204,6 +204,24 @@
         </div>
     </section>
 
+    @if (! empty($latestArticles) && count($latestArticles))
+        <section class="section section--tint home-articles">
+            <div class="container">
+                @include('partials.section-head', [
+                    'title' => 'Artikel terbaru',
+                    'subtitle' => 'Panduan memilih kampus, jurusan, beasiswa, dan biaya kuliah.',
+                    'linkLabel' => 'Lihat semua artikel',
+                    'linkUrl' => route('articles.index'),
+                ])
+                <div class="grid grid--articles">
+                    @foreach ($latestArticles as $article)
+                        @include('partials.article-card', ['article' => $article])
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
     <section class="section">
         <div class="container">
             @include('partials.section-head', [

@@ -43,5 +43,7 @@
     <script src="{{ asset('js/test-progress.js') }}" defer></script>
     <script src="{{ asset('js/copy-field.js') }}" defer></script>
     <script src="{{ asset('js/reveal.js') }}" defer></script>
+    <script src="{{ asset('js/countdown.js') }}" defer></script>
+    <script src="{{ asset('js/campus-majors.js') }}" defer></script>
 </body>
 </html>
