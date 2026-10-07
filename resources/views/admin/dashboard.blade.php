@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('title', 'Dasbor Admin')
+@section('title', 'Dasbor')
 
 @php
     $statusLabels = ['new' => 'Baru', 'contacted' => 'Dihubungi', 'registered' => 'Mendaftar', 'accepted' => 'Diterima'];
@@ -8,30 +8,63 @@
 @endphp
 
 @section('content')
-    <div class="page-head">
-        <div class="page-head__inner">
-            <h1 class="page-title">Dasbor admin</h1>
-            <p class="page-subtitle">
-                @if ($campus)
-                    Calon mahasiswa untuk {{ $campus->name }}.
-                @else
-                    Seluruh calon mahasiswa dari semua kampus.
-                @endif
-            </p>
-        </div>
+    <div class="admin-page-head">
+        <h1 class="admin-page-title">Dasbor</h1>
+        <p class="admin-page-subtitle">
+            @if ($campus)
+                Calon mahasiswa untuk {{ $campus->name }}.
+            @else
+                Seluruh calon mahasiswa dari semua kampus.
+            @endif
+        </p>
     </div>
 
-    <div class="container page-body">
-        @include('partials.admin-nav', ['active' => 'dashboard'])
-        @include('partials.flash')
+    @include('partials.flash')
 
-        @if ($leads->isEmpty())
-            @include('partials.empty-state', [
-                'icon' => 'users-three',
-                'title' => 'Belum ada calon mahasiswa',
-                'text' => 'Peminat yang mengajukan pendaftaran, mengunduh brosur, atau memfavoritkan kampus akan muncul di sini.',
-            ])
-        @else
+    <section aria-label="Ringkasan">
+        <div class="stat-cards">
+            <div class="stat-card">
+                <span class="stat-card__label">Total calon mahasiswa</span>
+                <strong class="stat-card__value">{{ $stats['leads_total'] }}</strong>
+            </div>
+            <div class="stat-card">
+                <span class="stat-card__label">Pendaftaran baru</span>
+                <strong class="stat-card__value">{{ $stats['recent_applications'] }}</strong>
+                <span class="stat-card__hint">{{ $stats['recent_days'] }} hari terakhir</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-card__label">Kampus terverifikasi</span>
+                <strong class="stat-card__value">{{ $stats['verified_campuses'] }}</strong>
+            </div>
+            @if ($stats['pending_campuses'] !== null)
+                <a class="stat-card" href="{{ route('admin.campuses.index') }}">
+                    <span class="stat-card__label">Menunggu verifikasi</span>
+                    <strong class="stat-card__value">{{ $stats['pending_campuses'] }}</strong>
+                    <span class="stat-card__hint">Periksa pengajuan</span>
+                </a>
+            @endif
+        </div>
+    </section>
+
+    <section aria-label="Calon mahasiswa per status">
+        <div class="stat-cards">
+            @foreach ($stats['leads_by_status'] as $item)
+                <div class="stat-card">
+                    <span class="stat-card__label">{{ $item['label'] }}</span>
+                    <strong class="stat-card__value">{{ $item['value'] }}</strong>
+                </div>
+            @endforeach
+        </div>
+    </section>
+
+    @if ($leads->isEmpty())
+        @include('partials.empty-state', [
+            'icon' => 'users-three',
+            'title' => 'Belum ada calon mahasiswa',
+            'text' => 'Peminat yang mengajukan pendaftaran, mengunduh brosur, atau memfavoritkan kampus akan muncul di sini.',
+        ])
+    @else
+        <section aria-label="Daftar calon mahasiswa">
             <div class="table-wrap">
                 <table class="table">
                     <thead>
@@ -72,6 +105,6 @@
                 </table>
             </div>
             {{ $leads->links('pagination.custom') }}
-        @endif
-    </div>
+        </section>
+    @endif
 @endsection

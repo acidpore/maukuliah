@@ -1,0 +1,222 @@
+/* Layout admin: sidebar tetap di desktop, drawer di layar kecil. Memakai token dari app.css. */
+:root {
+    --admin-sidebar-width: 248px;
+    --admin-topbar-height: 60px;
+}
+
+.admin {
+    background: var(--page);
+}
+
+.admin-shell {
+    min-height: 100vh;
+}
+
+.admin-sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 40;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    width: min(var(--admin-sidebar-width), 84vw);
+    padding: var(--space-5) var(--space-4);
+    background: var(--blue-950);
+    color: #fff;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+    overflow-y: auto;
+}
+
+.admin-shell.is-open .admin-sidebar {
+    transform: translateX(0);
+}
+
+.admin-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    background: rgba(4, 38, 92, 0.5);
+}
+
+.admin-backdrop[hidden] {
+    display: none;
+}
+
+.admin-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    color: #fff;
+    font-weight: 700;
+}
+
+.admin-brand__mark {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-control);
+    background: var(--blue-600);
+    font-weight: 700;
+}
+
+.admin-brand__text small {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--blue-200);
+}
+
+.admin-menu {
+    display: grid;
+    gap: var(--space-1);
+}
+
+.admin-menu__link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 44px;
+    padding: 0 var(--space-3);
+    border-radius: var(--radius-control);
+    color: var(--blue-100);
+    font-weight: 500;
+}
+
+.admin-menu__link:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+}
+
+.admin-menu__link.is-active {
+    background: #fff;
+    color: var(--blue-800);
+    font-weight: 600;
+}
+
+.admin-sidebar__site {
+    margin-top: auto;
+}
+
+.admin-body {
+    min-width: 0;
+}
+
+.admin-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: var(--admin-topbar-height);
+    padding: 0 var(--space-4);
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+}
+
+.admin-topbar__toggle {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-control);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 1.3rem;
+    cursor: pointer;
+}
+
+.admin-topbar__role {
+    font-weight: 600;
+    color: var(--ink);
+}
+
+.admin-topbar__user {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-left: auto;
+    min-width: 0;
+}
+
+.admin-topbar__name {
+    display: none;
+    color: var(--muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-main {
+    display: grid;
+    gap: var(--space-5);
+    padding: var(--space-5) var(--space-4) var(--space-7);
+    min-width: 0;
+}
+
+.admin-main > * {
+    min-width: 0;
+}
+
+.admin-page-head {
+    display: grid;
+    gap: var(--space-1);
+}
+
+.admin-page-title {
+    margin: 0;
+    font-size: 1.6rem;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+}
+
+.admin-page-subtitle {
+    margin: 0;
+    color: var(--muted);
+}
+
+.admin-main .stat-cards {
+    margin: 0;
+}
+
+.stat-card__hint {
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+@media (min-width: 900px) {
+    .admin-sidebar {
+        transform: none;
+        width: var(--admin-sidebar-width);
+    }
+
+    .admin-backdrop {
+        display: none;
+    }
+
+    .admin-body {
+        margin-left: var(--admin-sidebar-width);
+    }
+
+    .admin-topbar__toggle {
+        display: none;
+    }
+
+    .admin-topbar__name {
+        display: inline;
+    }
+
+    .admin-main {
+        padding: var(--space-6) var(--space-6) var(--space-8);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .admin-sidebar {
+        transition: none;
+    }
+}
