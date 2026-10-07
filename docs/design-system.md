@@ -100,6 +100,7 @@ Semua di `resources/views/partials/`. Props dikirim lewat `@include('partials.na
 | `major-card` | `major` | Perlu `campuses_count` |
 | `career-row` | `career` | Memakai `salaryRange()` |
 | `scholarship-card` | `scholarship` | Memakai `isOpen()`, tanggal, relasi `campus` opsional |
+| `article-card` | `article` | Kartu artikel: cover biru berpola dengan ikon kategori, badge, judul, ringkasan, tanggal dan lama baca |
 | `price` | `amount`, `original?`, `prefix?`, `suffix?` | Harga rupiah, harga coret bila `original` lebih besar |
 | `form-field` | `name`, `label`, `type?`, `value?`, `required?`, `hint?`, `autocomplete?` | Input dengan label, pesan error dari `$errors` |
 | `form-select` | `name`, `label`, `options`, `selected?`, `placeholder?`, `required?` | `options` berupa pasangan nilai dan teks |
@@ -111,7 +112,7 @@ Semua di `resources/views/partials/`. Props dikirim lewat `@include('partials.na
 | `favorite-button` | `type`, `model` | Tombol simpan atau lepas favorit, tamu diarahkan ke login |
 | `flash` | - | Pesan status sesi dan error umum |
 | `auth-actions` | - | Tombol masuk dan daftar, atau menu pengguna |
-| `admin-nav` | `active` | Navigasi sekunder admin |
+| `layouts.admin` | `@yield(title, content)` | Layout admin terpisah dari situs publik: sidebar kiri tetap (desktop) atau drawer (di bawah 900 px), topbar dengan nama pengguna dan tombol keluar. Gaya di `public/css/admin.css`, perilaku di `public/js/admin-drawer.js` |
 | `navbar`, `footer` | `navItems` | Dibangun di `layouts/app` dengan rute opsional yang jatuh ke `soon` |
 
 Aturan Blade: hanya perulangan dan kondisi sederhana. Pemformatan data
@@ -131,6 +132,7 @@ Satu file satu perilaku di `public/js`, tanpa skrip inline, dipicu atribut data.
 | `program-filter.js` | `data-program-table`, `data-program-filter`, `data-program-row`, `data-program-empty` | Saring baris program studi |
 | `test-progress.js` | `data-test-form`, `data-test-progress`, `data-test-answered` | Kemajuan pengerjaan tes |
 | `copy-field.js` | `data-copy-source`, `data-copy-button` | Salin tautan rujukan |
+| `admin-drawer.js` | `data-admin`, `data-admin-toggle`, `data-admin-backdrop` | Buka tutup menu samping admin di layar kecil |
 
 ## Aksesibilitas
 

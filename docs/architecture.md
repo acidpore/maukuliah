@@ -79,6 +79,7 @@ affiliates       id, user_id -> users (unik), code*, category
 affiliate_referrals id, affiliate_id, application_id* , status, paid_at
 commissions      id, affiliate_referral_id*, amount, status, paid_at
 faqs             id, scope_type (global|path), scope_key, question, answer, sort
+articles         id, title, slug*, category, excerpt, body, author_name, cover_icon, published_at (null = draf)
 careers          id, name, slug*, description, salary_min, salary_max, positions(json)
 career_major     career_id -> careers, major_id -> majors    (unik berpasangan)
 scholarships     id, campus_id -> campuses (null), name, slug*, description,
@@ -111,6 +112,9 @@ Pendaftar tanpa akun disimpan di `applications` dengan `user_id` kosong. Keterka
 
 | View | Variabel |
 |---|---|
+| `home` | selain variabel lama, `$latestArticles` (koleksi `Article` terbit, terbaru dulu, jumlah dari `config/articles.php` `latest_on_home`) |
+| `articles.index` | `$articles` (paginator `config('articles.per_page')`, hanya terbit, urut terbaru), `$query`, `$category` (kunci atau `null`), `$categories` (peta kunci ke `label` dan `icon` dari `config/articles.php`). Parameter `?q=` mencari judul, ringkasan, dan isi; `?category=` divalidasi terhadap kunci kategori |
+| `articles.show` | `$article` (404 bila belum terbit), `$relatedArticles` (maks `related_count`, kategori sama). Isi `body` dipecah per paragraf lewat `Article::paragraphs()` |
 | `careers.index` | `$careers` (paginator 12), `$query` |
 | `careers.show` | `$career` (dengan `majors`), `$relatedCampuses` (maks 8, dengan `majors_count`) |
 | `scholarships.index` | `$scholarships` (paginator 12, dengan `campus`), `$query` |
@@ -138,7 +142,7 @@ Variabel bersama untuk `layouts.app` (View Composer `NavigationComposer`, tanpa 
 
 Halaman detail (`campuses.show`, `majors.show`, `careers.show`, `scholarships.show`) menerima tambahan `$isFavorited` (bool). Tombol favorit mengirim `POST favorites.toggle` dengan field `type` (`campus`, `major`, `career`, `scholarship`) dan `id`, lalu kembali ke halaman asal (butuh login).
 
-`campuses.show` kini menerima: `$campus` (dengan `majors`), `$brochures` (koleksi `Brochure`, `type` enum `BrochureType`), `$admissionPeriods` (koleksi `AdmissionPeriod`, method `isOpen()`), `$studyPrograms` (koleksi `StudyProgram` dengan `major`, diurut jenjang lalu cicilan), `$faqs` (koleksi `Faq`: `question`, `answer`), `$isFavorited`. Tautan unduh: `route('brochures.download', [$campus, $brochure])`.
+`campuses.show` kini menerima: `$campus` (dengan `majors`), `$brochures` (koleksi `Brochure`, `type` enum `BrochureType`), `$admissionPeriods` (koleksi `AdmissionPeriod`, method `isOpen()`), `$studyPrograms` (koleksi `StudyProgram` dengan `major`, diurut jenjang lalu cicilan), `$faqs` (koleksi `Faq`: `question`, `answer`), `$testimonials` (koleksi `Testimonial`: `name`, `major_name`, `current_job`, `graduation_year`, `quote`, method `initials()`), `$photos` (koleksi `CampusPhoto` terurut `sort`: `caption`, method `url()`; bagian Galeri disembunyikan bila kosong), `$isFavorited`. Tautan unduh: `route('brochures.download', [$campus, $brochure])`.
 
 `campuses.index` (juga halaman SEO) memuat `studyPrograms` pada setiap kampus (eager load) agar kartu bisa menampilkan badge program, jadwal, dan metode tanpa query tambahan di Blade.
 
@@ -172,7 +176,7 @@ Halaman SEO (`campuses.by-schedule`, `campuses.by-program`, `campuses.by-method`
 | `GET /affiliate` | `affiliate.index` | publik | `affiliate.index` dengan `$categories` (case `AffiliateCategory` dengan `label()`), `$commissionPerStudent`, `$paymentWindowDays`, `$affiliate` (milik pengguna atau `null`) |
 | `POST /affiliate/register` | `affiliate.register` | login | field `category`; redirect ke dasbor |
 | `GET /affiliate/dashboard` | `affiliate.dashboard` | login dan sudah menjadi afiliator (bila belum, redirect ke `affiliate.index`) | `affiliate.dashboard` dengan `$affiliate`, `$referralUrl`, `$stats`, `$referrals` |
-| `GET /admin` | `admin.dashboard` | role `super_admin` atau `campus_admin` | `admin.dashboard` dengan `$leads` (paginator 15, dengan `user`, `campus`, `application`), `$statusOptions` (case `LeadStatus` dengan `label()`), `$campus` (kampus milik admin kampus, `null` bagi super admin) |
+| `GET /admin` | `admin.dashboard` | role `super_admin` atau `campus_admin` | `admin.dashboard` dengan `$leads` (paginator 15, dengan `user`, `campus`, `application`), `$statusOptions` (case `LeadStatus` dengan `label()`), `$campus` (kampus milik admin kampus, `null` bagi super admin), `$stats` (lihat di bawah). View memakai `layouts.admin` |
 | `POST /admin/leads/{lead}/status` | `admin.leads.status` | admin; admin kampus hanya untuk kampusnya | field `status` |
 | `GET /admin/campuses` | `admin.campuses.index` | hanya `super_admin` | `admin.campuses.index` dengan `$campuses` (paginator 15, status `pending`) |
 | `POST /admin/campuses/{campus}/submit` | `admin.campuses.submit` | admin kampus pemilik | redirect back; transisi tidak sah muncul di `$errors->first('status')` |
@@ -184,6 +188,29 @@ Bentuk data:
 - `$summary`: `['title', 'headline', 'description']`. `$scores`: daftar `['label', 'value', 'max']`. `$recommendedMajors`: koleksi `Major` terurut dari yang paling cocok.
 - `$stats` (afiliasi): `['total', 'paid', 'pending_commission', 'paid_commission']`, nilai komisi dalam rupiah (integer). Komisi tertunda mencakup status pending dan approved.
 - `$referrals`: paginator `AffiliateReferral` dengan `application` (`full_name`, `email`) dan `commission` (`amount`, `status`). `status` pada rujukan berupa enum `ReferralStatus`.
+
+### Dasbor admin
+
+Layout `layouts.admin` dipakai `admin.dashboard` dan `admin.campuses.index`, tanpa navbar dan footer publik (menu sidebar disusun di layout; Verifikasi kampus hanya tampil untuk `super_admin`). `$stats` dihitung `AdminStatsService::forUser` (admin kampus hanya melihat angka kampusnya):
+
+| Kunci | Isi |
+|---|---|
+| `leads_by_status` | daftar `['label', 'value']` urut `LeadStatus::cases()` |
+| `leads_total` | jumlah lead dalam cakupan pengguna |
+| `verified_campuses` | kampus terverifikasi (semua pengguna) |
+| `pending_campuses` | kampus status pending, `null` bagi admin kampus |
+| `recent_applications`, `recent_days` | pendaftaran dalam `AdminStatsService::RECENT_DAYS` (7) hari terakhir, dan nilai harinya |
+
+### Tryout tahap demo
+
+Katalog dibaca dari `config/tryouts.php` lewat `TryoutCatalog` (`all`, `find`, `score`). Hasil tidak disimpan. Model basis data, riwayat, dan bank soal menyusul pada fase 7.
+
+| Rute | Nama | View dan variabel |
+|---|---|---|
+| `GET /tryouts` | `tryouts.index` | `tryouts.index` dengan `$tryouts` (koleksi array: `slug`, `title`, `description`, `status`, `duration_minutes`, `price`, `question_count`, `is_open`) |
+| `GET /tryouts/{slug}` | `tryouts.show` | `tryouts.show` dengan `$tryout`; 404 bila tidak dikenal |
+| `GET /tryouts/{slug}/kerjakan` | `tryouts.take` | `tryouts.take` dengan `$tryout` (memuat `questions`); 404 bila belum dibuka |
+| `POST /tryouts/{slug}/kerjakan` | `tryouts.submit` | `tryouts.result` dengan `$tryout` dan `$result` (`correct`, `total`, `percent`, `review[]`); field `answers[indeks]` berisi indeks opsi |
 
 ### Konfigurasi afiliasi (`config/affiliate.php`)
 
