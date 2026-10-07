@@ -20,7 +20,7 @@
 
     <div class="container">
         <div class="form-layout">
-            <form class="form-card" method="POST" action="{{ route('applications.store') }}" novalidate>
+            <form class="form-card" method="POST" action="{{ route('applications.store') }}" data-campus-majors="{{ json_encode($campusMajors) }}" novalidate>
                 @csrf
 
                 @if (session('status'))
@@ -33,19 +33,19 @@
 
                 <fieldset class="form-card__group">
                     <legend class="form-card__legend">Data diri</legend>
-                    @include('partials.form-field', ['name' => 'full_name', 'label' => 'Nama lengkap', 'autocomplete' => 'name'])
-                    @include('partials.form-field', ['name' => 'email', 'label' => 'Email aktif', 'type' => 'email', 'autocomplete' => 'email'])
-                    @include('partials.form-field', ['name' => 'whatsapp', 'label' => 'Nomor WhatsApp', 'type' => 'tel', 'hint' => 'Contoh: 081234567890', 'autocomplete' => 'tel'])
+                    @include('partials.form-field', ['name' => 'full_name', 'label' => 'Nama lengkap', 'autocomplete' => 'name', 'value' => auth()->user()?->name])
+                    @include('partials.form-field', ['name' => 'email', 'label' => 'Email aktif', 'type' => 'email', 'autocomplete' => 'email', 'value' => auth()->user()?->email])
+                    @include('partials.form-field', ['name' => 'whatsapp', 'label' => 'Nomor WhatsApp', 'type' => 'tel', 'hint' => 'Contoh: 081234567890', 'autocomplete' => 'tel', 'value' => auth()->user()?->phone])
                     @include('partials.form-select', ['name' => 'last_education', 'label' => 'Pendidikan terakhir', 'options' => $enumOptions($options['last_education'])])
                     @include('partials.form-field', ['name' => 'region', 'label' => 'Wilayah (kota atau provinsi)'])
                 </fieldset>
 
                 <fieldset class="form-card__group">
                     <legend class="form-card__legend">Pilihan kuliah</legend>
+                    @include('partials.form-select', ['name' => 'campus_id', 'label' => 'Kampus', 'options' => $campusOptions, 'selected' => old('campus_id', $selectedCampus)])
                     @include('partials.form-select', ['name' => 'major_id', 'label' => 'Jurusan', 'options' => $majorOptions])
                     @include('partials.form-select', ['name' => 'program_type', 'label' => 'Program kuliah', 'options' => $enumOptions($options['program_type'])])
                     @include('partials.form-select', ['name' => 'schedule', 'label' => 'Jadwal kuliah', 'options' => $enumOptions($options['schedule'])])
-                    @include('partials.form-select', ['name' => 'campus_id', 'label' => 'Kampus', 'options' => $campusOptions, 'selected' => old('campus_id', $selectedCampus)])
                     @include('partials.form-select', ['name' => 'source_info', 'label' => 'Tahu dari mana tentang kami', 'options' => $enumOptions($options['source_info'])])
                 </fieldset>
 

@@ -9,6 +9,7 @@ use App\Enums\SourceInfo;
 use App\Http\Requests\StoreApplicationRequest;
 use App\Models\Campus;
 use App\Models\Major;
+use App\Models\StudyProgram;
 use App\Services\ApplicationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,6 +25,7 @@ class ApplicationController extends Controller
             'selectedCampusId' => $this->selectedCampusId($request->query('campus')),
             'campuses' => Campus::verified()->orderBy('name')->get(['id', 'name', 'city', 'province']),
             'majors' => Major::orderBy('name')->get(['id', 'name']),
+            'campusMajors' => $this->campusMajorMap(),
             'options' => [
                 'last_education' => LastEducation::cases(),
                 'program_type' => ProgramType::cases(),
@@ -44,6 +46,21 @@ class ApplicationController extends Controller
         }
 
         return Campus::verified()->where('slug', $slug)->value('id');
+    }
+
+    /**
+     * Peta kampus ke jurusan yang disediakan, dipakai klien untuk menyaring
+     * pilihan jurusan sebelum formulir dikirim.
+     *
+     * @return array<int, array<int, int>>
+     */
+    private function campusMajorMap(): array
+    {
+        return StudyProgram::query()
+            ->get(['campus_id', 'major_id'])
+            ->groupBy('campus_id')
+            ->map(fn ($programs) => $programs->pluck('major_id')->unique()->values()->all())
+            ->all();
     }
 
     public function store(StoreApplicationRequest $request): RedirectResponse
