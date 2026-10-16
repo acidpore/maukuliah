@@ -55,6 +55,7 @@
     <script src="{{ asset('js/reveal.js') }}" defer></script>
     <script src="{{ asset('js/countdown.js') }}" defer></script>
     <script src="{{ asset('js/campus-majors.js') }}" defer></script>
+    <script src="{{ asset('js/program-price.js') }}" defer></script>
     @if (request()->routeIs('home'))<script src="{{ asset('js/landing.js') }}" defer></script>@endif
 </body>
 </html>

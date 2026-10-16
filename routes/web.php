@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\CampusVerificationController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LeadStatusController;
+use App\Http\Controllers\Admin\StudyProgramController;
 use App\Http\Controllers\AffiliateController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\ArticleController;
@@ -121,6 +122,11 @@ Route::prefix('admin')
         Route::post('/campuses/{campus}/submit', [CampusVerificationController::class, 'submit'])->name('campuses.submit');
         Route::post('/campuses/{campus}/approve', [CampusVerificationController::class, 'approve'])->name('campuses.approve');
         Route::post('/campuses/{campus}/reject', [CampusVerificationController::class, 'reject'])->name('campuses.reject');
+
+        Route::get('/study-programs', [StudyProgramController::class, 'index'])->name('study-programs.index');
+        Route::post('/campuses/{campus}/study-programs', [StudyProgramController::class, 'store'])->name('study-programs.store');
+        Route::put('/study-programs/{studyProgram}', [StudyProgramController::class, 'update'])->name('study-programs.update');
+        Route::delete('/study-programs/{studyProgram}', [StudyProgramController::class, 'destroy'])->name('study-programs.destroy');
     });
 
 Route::get('/soon', fn () => view('soon'))->name('soon');

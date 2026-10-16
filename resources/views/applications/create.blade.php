@@ -20,7 +20,7 @@
 
     <div class="container">
         <div class="form-layout">
-            <form class="form-card" method="POST" action="{{ route('applications.store') }}" data-campus-majors="{{ json_encode($campusMajors) }}" novalidate>
+            <form class="form-card" method="POST" action="{{ route('applications.store') }}" data-campus-majors="{{ json_encode($campusMajors) }}" data-program-prices="{{ json_encode($programPrices) }}" novalidate>
                 @csrf
 
                 @if (session('status'))
@@ -45,6 +45,7 @@
                     @include('partials.form-select', ['name' => 'campus_id', 'label' => 'Kampus', 'options' => $campusOptions, 'selected' => old('campus_id', $selectedCampus)])
                     @include('partials.form-select', ['name' => 'major_id', 'label' => 'Jurusan', 'options' => $majorOptions])
                     @include('partials.form-select', ['name' => 'program_type', 'label' => 'Program kuliah', 'options' => $enumOptions($options['program_type'])])
+                    <p class="price" id="program-price" hidden></p>
                     @include('partials.form-select', ['name' => 'schedule', 'label' => 'Jadwal kuliah', 'options' => $enumOptions($options['schedule'])])
                     @include('partials.form-select', ['name' => 'source_info', 'label' => 'Tahu dari mana tentang kami', 'options' => $enumOptions($options['source_info'])])
                 </fieldset>

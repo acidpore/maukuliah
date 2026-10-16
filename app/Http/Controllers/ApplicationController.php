@@ -26,6 +26,7 @@ class ApplicationController extends Controller
             'campuses' => Campus::verified()->orderBy('name')->get(['id', 'name', 'city', 'province']),
             'majors' => Major::orderBy('name')->get(['id', 'name']),
             'campusMajors' => $this->campusMajorMap(),
+            'programPrices' => $this->programPriceMap(),
             'options' => [
                 'last_education' => LastEducation::cases(),
                 'program_type' => ProgramType::cases(),
@@ -60,6 +61,28 @@ class ApplicationController extends Controller
             ->get(['campus_id', 'major_id'])
             ->groupBy('campus_id')
             ->map(fn ($programs) => $programs->pluck('major_id')->unique()->values()->all())
+            ->all();
+    }
+
+    /**
+     * Peta "kampus:jurusan:program" ke harga prodi, dipakai klien untuk
+     * menampilkan biaya dan promo begitu kampus, jurusan, dan program dipilih.
+     *
+     * @return array<string, array<string, int|bool>>
+     */
+    private function programPriceMap(): array
+    {
+        return StudyProgram::query()
+            ->get(['campus_id', 'major_id', 'program_type', 'registration_fee', 'first_payment', 'monthly_installment', 'original_monthly_installment'])
+            ->mapWithKeys(fn ($program) => [
+                "{$program->campus_id}:{$program->major_id}:{$program->program_type->value}" => [
+                    'registration_fee' => $program->registration_fee,
+                    'first_payment' => $program->first_payment,
+                    'monthly_installment' => $program->monthly_installment,
+                    'original_monthly_installment' => $program->original_monthly_installment,
+                    'has_discount' => $program->hasDiscount(),
+                ],
+            ])
             ->all();
     }
 
