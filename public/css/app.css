@@ -1976,3 +1976,6 @@ ul {
         font-size: clamp(2.2rem, 3.5vw, 3.1rem);
     }
 }
+
+/* Maukuliah open-book brand mark. */
+.brand__logo { width: 44px; height: 44px; object-fit: contain; flex-shrink: 0; }

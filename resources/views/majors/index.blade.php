@@ -3,11 +3,13 @@
 @section('title', 'Daftar Jurusan')
 
 @section('content')
-    <div class="page-head">
+    <div class="page-head page-head--majors">
+        <div class="container page-head__visual" aria-hidden="true"><img src="{{ asset('images/landing/major.webp') }}" alt="" width="220" height="150"></div>
         <div class="page-head__inner">
+            <span class="directory-label"><i class="ph ph-books" aria-hidden="true"></i> Pilihan jurusan dari berbagai bidang studi.</span>
             <h1 class="page-title">Daftar jurusan</h1>
             <p class="page-subtitle">Temukan jurusan yang sesuai minat, bakat, dan prospek kariermu.</p>
-            <p class="page-count">{{ $majors->total() }} jurusan ditemukan</p>
+            <p class="page-count">{{ number_format($majors->total()) }} jurusan ditemukan</p>
         </div>
     </div>
 

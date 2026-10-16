@@ -4,7 +4,13 @@
     $programTypes = $programs->pluck('program_type')->unique();
     $schedules = $programs->flatMap(fn ($program) => $program->schedules)->unique();
 @endphp
-<a class="campus-card" href="{{ route('campuses.show', $campus) }}">
+<a class="campus-card {{ ($directory ?? false) ? 'campus-card--directory' : '' }}" href="{{ route('campuses.show', $campus) }}">
+    @if ($directory ?? false)
+        @php($directoryPhoto = $campus->photos->first())
+        <div class="campus-card__cover {{ $directoryPhoto ? 'has-photo' : 'has-logo' }}">
+            @if ($directoryPhoto)<img src="{{ $directoryPhoto->url() }}" alt="" width="480" height="270" loading="lazy">@else @include('partials.campus-logo', ['campus' => $campus]) @endif
+        </div>
+    @endif
     <div class="campus-card__head">
         @include('partials.campus-logo', ['campus' => $campus])
         @include('partials.badge', ['label' => $campus->typeLabel(), 'variant' => $campus->type])

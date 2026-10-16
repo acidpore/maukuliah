@@ -1,7 +1,7 @@
 <header class="site-header">
     <div class="container navbar">
         <a class="brand" href="{{ route('home') }}" aria-label="{{ config('app.name') }}, beranda">
-            <span class="brand__mark">{{ mb_substr(config('app.name'), 0, 1) }}</span>
+            <img class="brand__logo" src="{{ asset('images/brand/siapkuliah-mark.webp') }}" alt="" width="44" height="44">
             <span>{{ config('app.name') }}</span>
         </a>
 

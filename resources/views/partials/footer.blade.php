@@ -3,7 +3,7 @@
         <div class="footer-grid">
             <div>
                 <a class="brand footer-brand" href="{{ route('home') }}">
-                    <span class="brand__mark">{{ mb_substr(config('app.name'), 0, 1) }}</span>
+                    <img class="brand__logo" src="{{ asset('images/brand/siapkuliah-mark.webp') }}" alt="" width="44" height="44">
                     <span>{{ config('app.name') }}</span>
                 </a>
                 <p class="footer-tagline">Cari kampus, jurusan, karier, dan beasiswa dalam satu tempat. Gratis untuk calon mahasiswa.</p>

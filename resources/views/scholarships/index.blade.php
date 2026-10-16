@@ -3,11 +3,13 @@
 @section('title', 'Daftar Beasiswa')
 
 @section('content')
-    <div class="page-head">
+    <div class="page-head page-head--scholarships">
+        <div class="container page-head__visual" aria-hidden="true"><img src="{{ asset('images/landing/scholarship.webp') }}" alt="" width="220" height="150"></div>
         <div class="page-head__inner">
+            <span class="directory-label"><i class="ph ph-medal" aria-hidden="true"></i> Peluang beasiswa untuk mendukung kuliahmu.</span>
             <h1 class="page-title">Daftar beasiswa</h1>
             <p class="page-subtitle">Cek periode pendaftaran beasiswa dari pemerintah dan kampus.</p>
-            <p class="page-count">{{ $scholarships->total() }} beasiswa ditemukan</p>
+            <p class="page-count">{{ number_format($scholarships->total()) }} beasiswa tersedia</p>
         </div>
     </div>
 

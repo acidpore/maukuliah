@@ -17,11 +17,13 @@
 @section('description', $pageIntro)
 
 @section('content')
-    <div class="page-head">
+    <div class="page-head page-head--campuses">
+        <div class="container page-head__visual" aria-hidden="true"><img src="{{ asset('images/landing/campus.webp') }}" alt="" width="230" height="158"></div>
         <div class="page-head__inner">
+            <span class="directory-label"><i class="ph ph-buildings" aria-hidden="true"></i> Temukan tempat kuliah yang cocok untukmu</span>
             <h1 class="page-title">{{ $pageTitle }}</h1>
             <p class="page-subtitle">{{ $pageIntro }}</p>
-            <p class="page-count">{{ $campuses->total() }} kampus ditemukan</p>
+            <p class="page-count">{{ number_format($campuses->total()) }} kampus ditemukan</p>
         </div>
     </div>
 
@@ -57,7 +59,7 @@
                     @else
                         <div class="grid grid--campuses grid--campuses-list">
                             @foreach ($campuses as $campus)
-                                @include('partials.campus-card', ['campus' => $campus])
+                                @include('partials.campus-card', ['campus' => $campus, 'directory' => true])
                             @endforeach
                         </div>
                         {{ $campuses->links('pagination.custom') }}

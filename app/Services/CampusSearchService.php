@@ -35,7 +35,7 @@ class CampusSearchService
         $query = Campus::query()
             ->verified()
             ->withCount('majors')
-            ->with('studyPrograms')
+            ->with(['studyPrograms', 'photos'])
             ->withMin('studyPrograms as min_monthly_installment', 'monthly_installment')
             ->search($term)
             ->filter($filters);

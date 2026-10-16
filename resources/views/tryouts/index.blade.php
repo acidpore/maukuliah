@@ -4,8 +4,10 @@
 @section('description', 'Latihan soal seleksi masuk perguruan tinggi dengan timer dan pembahasan.')
 
 @section('content')
-    <div class="page-head">
+    <div class="page-head page-head--tryouts">
+        <div class="container page-head__visual" aria-hidden="true"><img src="{{ asset('images/landing/tryout.webp') }}" alt="" width="220" height="150"></div>
         <div class="page-head__inner">
+            <span class="directory-label"><i class="ph ph-notepad" aria-hidden="true"></i> Latihan soal untuk persiapan ujian masuk.</span>
             <h1 class="page-title">Tryout</h1>
             <p class="page-subtitle">Uji kesiapanmu dengan soal berwaktu, lengkap dengan skor dan pembahasan.</p>
         </div>

@@ -8,8 +8,10 @@
 @endphp
 
 @section('content')
-    <div class="page-head">
+    <div class="page-head page-head--tests">
+        <div class="container page-head__visual" aria-hidden="true"><img src="{{ asset('images/landing/potential.webp') }}" alt="" width="220" height="150"></div>
         <div class="page-head__inner">
+            <span class="directory-label"><i class="ph ph-target" aria-hidden="true"></i> Mulai kenali potensi dan cara belajarmu.</span>
             <h1 class="page-title">Tes potensi</h1>
             <p class="page-subtitle">Kenali minat, gaya belajar, dan kepribadianmu untuk mendapatkan rekomendasi jurusan yang paling cocok. Gratis.</p>
             @auth

@@ -3,11 +3,13 @@
 @section('title', 'Daftar Karier')
 
 @section('content')
-    <div class="page-head">
+    <div class="page-head page-head--careers">
+        <div class="container page-head__visual" aria-hidden="true"><img src="{{ asset('images/landing/career.webp') }}" alt="" width="220" height="150"></div>
         <div class="page-head__inner">
+            <span class="directory-label"><i class="ph ph-briefcase" aria-hidden="true"></i> Jelajahi beragam pilihan profesi.</span>
             <h1 class="page-title">Daftar karier</h1>
             <p class="page-subtitle">Pelajari profesi, kisaran gaji, dan jurusan yang mengarah ke sana.</p>
-            <p class="page-count">{{ $careers->total() }} karier ditemukan</p>
+            <p class="page-count">{{ number_format($careers->total()) }} profesi ditemukan</p>
         </div>
     </div>
 
