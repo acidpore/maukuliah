@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StudyProgramRequest;
 use App\Models\Campus;
@@ -17,12 +16,7 @@ class StudyProgramController extends Controller
 {
     public function index(Request $request): View
     {
-        $user = $request->user();
-        $isSuperAdmin = $user->role === UserRole::SuperAdmin;
-
-        $campus = $isSuperAdmin
-            ? Campus::verified()->find($request->integer('campus')) ?? $user->campus
-            : $user->campus;
+        $campus = Campus::find($request->integer('campus'));
 
         if ($campus) {
             Gate::authorize('update', $campus);
@@ -30,7 +24,7 @@ class StudyProgramController extends Controller
 
         return view('admin.study-programs.index', [
             'campus' => $campus,
-            'campuses' => $isSuperAdmin ? Campus::verified()->orderBy('name')->get(['id', 'name']) : null,
+            'campuses' => Campus::orderBy('name')->get(['id', 'name']),
             'studyPrograms' => $campus
                 ? $campus->studyPrograms()->with('major')->orderBy('major_id')->get()
                 : collect(),

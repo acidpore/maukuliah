@@ -4,7 +4,7 @@
     $menu = [
         ['label' => 'Dasbor', 'icon' => 'squares-four', 'url' => route('admin.dashboard'), 'active' => request()->routeIs('admin.dashboard'), 'visible' => true],
         ['label' => 'Verifikasi kampus', 'icon' => 'seal-check', 'url' => route('admin.campuses.index'), 'active' => request()->routeIs('admin.campuses.*'), 'visible' => $isSuperAdmin],
-        ['label' => 'Program studi', 'icon' => 'graduation-cap', 'url' => route('admin.study-programs.index'), 'active' => request()->routeIs('admin.study-programs.*'), 'visible' => true],
+        ['label' => 'Kampus', 'icon' => 'bank', 'url' => route('admin.campus.index'), 'active' => request()->routeIs('admin.campus.*') || request()->routeIs('admin.study-programs.*'), 'visible' => $isSuperAdmin],
     ];
 @endphp
 <!DOCTYPE html>

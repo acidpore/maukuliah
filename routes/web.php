@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CampusVerificationController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\CampusController as AdminCampusController;
 use App\Http\Controllers\Admin\LeadStatusController;
 use App\Http\Controllers\Admin\StudyProgramController;
 use App\Http\Controllers\AffiliateController;
@@ -123,10 +124,19 @@ Route::prefix('admin')
         Route::post('/campuses/{campus}/approve', [CampusVerificationController::class, 'approve'])->name('campuses.approve');
         Route::post('/campuses/{campus}/reject', [CampusVerificationController::class, 'reject'])->name('campuses.reject');
 
-        Route::get('/study-programs', [StudyProgramController::class, 'index'])->name('study-programs.index');
-        Route::post('/campuses/{campus}/study-programs', [StudyProgramController::class, 'store'])->name('study-programs.store');
-        Route::put('/study-programs/{studyProgram}', [StudyProgramController::class, 'update'])->name('study-programs.update');
-        Route::delete('/study-programs/{studyProgram}', [StudyProgramController::class, 'destroy'])->name('study-programs.destroy');
+        Route::middleware('role:super_admin')->group(function () {
+            Route::get('/study-programs', [StudyProgramController::class, 'index'])->name('study-programs.index');
+            Route::post('/campuses/{campus}/study-programs', [StudyProgramController::class, 'store'])->name('study-programs.store');
+            Route::put('/study-programs/{studyProgram}', [StudyProgramController::class, 'update'])->name('study-programs.update');
+            Route::delete('/study-programs/{studyProgram}', [StudyProgramController::class, 'destroy'])->name('study-programs.destroy');
+
+            Route::get('/campus', [AdminCampusController::class, 'index'])->name('campus.index');
+            Route::get('/campus/create', [AdminCampusController::class, 'create'])->name('campus.create');
+            Route::post('/campus', [AdminCampusController::class, 'store'])->name('campus.store');
+            Route::get('/campus/{campus}/edit', [AdminCampusController::class, 'edit'])->name('campus.edit');
+            Route::put('/campus/{campus}', [AdminCampusController::class, 'update'])->name('campus.update');
+            Route::delete('/campus/{campus}', [AdminCampusController::class, 'destroy'])->name('campus.destroy');
+        });
     });
 
 Route::get('/soon', fn () => view('soon'))->name('soon');

@@ -35,10 +35,14 @@ class GoogleAuthController extends Controller
                 ->withErrors(['email' => 'Masuk dengan Google gagal. Silakan coba lagi.']);
         }
 
-        Auth::login($this->google->findOrCreate($googleUser), true);
+        $user = $this->google->findOrCreate($googleUser);
+
+        Auth::login($user, true);
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('home'));
+        $destination = $user->isAdmin() ? route('admin.dashboard') : route('home');
+
+        return redirect()->intended($destination);
     }
 }

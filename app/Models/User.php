@@ -69,4 +69,9 @@ class User extends Authenticatable
     {
         return $this->role === $role;
     }
+
+    public function isAdmin(): bool
+    {
+        return $this->hasRole(UserRole::SuperAdmin) || $this->hasRole(UserRole::CampusAdmin);
+    }
 }
